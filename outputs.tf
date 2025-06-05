@@ -29,3 +29,9 @@ output "subnet_id" {
   description = "ID of the subnet where instances were created"
   value       = local.subnet_id
 }
+
+
+output "public_fqdn" {
+  description = "Public FQDN of the AAP instance"
+  value       = aws_instance.this[*].public_dns
+}

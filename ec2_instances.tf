@@ -1,14 +1,11 @@
 # EC2 instances in default VPC
 
 locals {
-  instance_count = 2
   subnet_id      = var.subnet_id != null ? var.subnet_id : data.aws_subnets.default.ids[0]
-
 }
 
 # Create EC2 instances
 resource "aws_instance" "this" {
-  count = local.instance_count
 
   ami                    = var.ami_id
   instance_type          = var.instance_type
@@ -35,7 +32,7 @@ resource "aws_instance" "this" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.instance_name_prefix}-${count.index + 1}"
+      Name = "${var.instance_name_prefix}"
     }
   )
 }
