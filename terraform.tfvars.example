@@ -1,0 +1,15 @@
+# Example terraform.tfvars file with default values
+# Customize these values as needed
+
+aws_region         = "us-east-1"
+instance_name_prefix = "app-server"
+instance_type      = "t3.micro"
+# ami_id             = "ami-0123456789abcdef0"  # Uncomment and specify an AMI ID
+# key_name           = "your-key-pair-name"     # Uncomment and specify your key pair name
+
+tags = {
+  Environment = "dev"
+  Project     = "demo-app"
+  Owner       = "DevOps"
+  Terraform   = "true"
+}
