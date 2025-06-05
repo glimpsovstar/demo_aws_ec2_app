@@ -11,7 +11,7 @@ resource "aws_instance" "this" {
   instance_type          = var.instance_type
   subnet_id              = local.subnet_id
   vpc_security_group_ids = [aws_security_group.this.id]
-  key_name               = var.key_name
+  key_name               = module.key_pair.key_pair_name
   associate_public_ip_address = true
   # Enable detailed monitoring (optional)
   monitoring = true
@@ -36,3 +36,12 @@ resource "aws_instance" "this" {
     }
   )
 }
+
+
+module "key_pair" {
+  source  = "terraform-aws-modules/key-pair/aws"
+  version = "2.0.2"
+
+  key_name           = "aap-testing"
+  create_private_key = true
+} 

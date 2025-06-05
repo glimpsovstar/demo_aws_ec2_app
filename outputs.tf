@@ -35,3 +35,15 @@ output "public_fqdn" {
   description = "Public FQDN of the AAP instance"
   value       = aws_instance.this.public_dns
 }
+
+
+output "key_pair_name" {
+  description = "Name of the key pair"
+  value       = module.key_pair.key_pair_name
+}
+
+output "private_key_pem" {
+  description = "Private key in PEM format"
+  value       = module.key_pair.private_key_pem
+  sensitive   = true
+}
