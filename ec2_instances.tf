@@ -3,14 +3,14 @@
 locals {
   instance_count = 2
   subnet_id      = var.subnet_id != null ? var.subnet_id : data.aws_subnets.default.ids[0]
-  ami_id         = var.ami_id != null ? var.ami_id : data.aws_ami.amazon_linux[0].id
+
 }
 
 # Create EC2 instances
 resource "aws_instance" "this" {
   count = local.instance_count
 
-  ami                    = local.ami_id
+  ami                    = var.ami_id
   instance_type          = var.instance_type
   subnet_id              = local.subnet_id
   vpc_security_group_ids = [aws_security_group.this.id]

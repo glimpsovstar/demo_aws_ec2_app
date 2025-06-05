@@ -19,21 +19,3 @@ data "aws_subnets" "default" {
     values = ["true"]
   }
 }
-
-# Get latest Amazon Linux 2 AMI if ami_id is not specified
-data "aws_ami" "amazon_linux" {
-  count       = var.ami_id == null ? 1 : 0
-  most_recent = true
-  owners      = ["amazon"]
-  
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
