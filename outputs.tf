@@ -37,13 +37,13 @@ output "public_fqdn" {
 }
 
 
-output "key_pair_name" {
-  description = "Name of the key pair"
-  value       = module.key_pair.key_pair_name
-}
+# output "key_pair_name" {
+#   description = "Name of the key pair"
+#   value       = module.key_pair.key_pair_name
+# }
 
-output "private_key_pem" {
-  description = "Private key in PEM format"
-  value       = module.key_pair.private_key_pem
-  sensitive   = true
-}
+# output "private_key_pem" {
+#   description = "Private key in PEM format"
+#   value       = module.key_pair.private_key_pem
+#   sensitive   = true
+# }

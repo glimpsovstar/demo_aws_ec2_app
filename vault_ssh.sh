@@ -7,6 +7,7 @@ GITHUB_TOKEN="${GITHUB_TOKEN}"  # must be set in your environment
 EMAIL="simon.lynch@hashicorp.com"  # update this
 SSH_SUBDIR="aap"  # update if needed
 VAULT_SIGN_PATH="/ssh/sign/demo"  # update if needed
+SSH_USERNAME="aap"  # Set a default username, can be overridden
 
 # === DERIVED VARIABLES ===
 SSH_DIR="$HOME/.ssh/${SSH_SUBDIR}"
@@ -21,6 +22,8 @@ function check_env_vars() {
     echo "❌ GITHUB_TOKEN environment variable is not set."
     exit 1
   fi
+  
+  echo "🔧 Using SSH username: $SSH_USERNAME"
 }
 
 function create_ssh_directory() {
@@ -49,7 +52,11 @@ function authenticate_to_vault() {
 
 function sign_ssh_key() {
   echo "✍️  Signing public key with Vault..."
-  vault write -namespace="$VAULT_NAMESPACE" -field=signed_key "$VAULT_SIGN_PATH" public_key=@"$PUBLIC_KEY_PATH" > "$CERT_PATH"
+  vault write -namespace="$VAULT_NAMESPACE" \
+    -field=signed_key \
+    "$VAULT_SIGN_PATH" \
+    public_key=@"$PUBLIC_KEY_PATH" \
+    valid_principals="$SSH_USERNAME" > "$CERT_PATH"
   chmod 644 "$CERT_PATH"
   echo "✅ Signed certificate written to $CERT_PATH"
 }
@@ -57,7 +64,7 @@ function sign_ssh_key() {
 function show_ssh_usage() {
   echo ""
   echo "You can now SSH using:"
-  echo "ssh -i $PRIVATE_KEY_PATH vm_user@<dns-or-ip-address>"
+  echo "ssh -i $PRIVATE_KEY_PATH $SSH_USERNAME@<server-ip-or-hostname>"
 }
 
 # === MAIN EXECUTION ===
