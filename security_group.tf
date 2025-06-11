@@ -10,7 +10,6 @@
 # 2. Each rule is managed as an individual resource with unique state
 # 3. Rules can be added/removed without affecting other rules
 # 4. Better state management and troubleshooting capabilities
-# 5. Works well with for_each for dynamic rule creation
 
 resource "aws_security_group" "this" {
   name                   = var.security_group_name

@@ -19,7 +19,12 @@ resource "aws_instance" "this" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.instance_name_prefix}"
+      Name        = "${var.instance_name_prefix}"
+      Environment = "development"
+      CostCenter  = "engineering"
+      Owner       = "devops-team"
+      Purpose     = "demo-application"
+      Backup      = "daily"
     }
   )
 }

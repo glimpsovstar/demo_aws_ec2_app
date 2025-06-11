@@ -36,52 +36,6 @@ output "public_fqdn" {
   value       = aws_instance.this.public_dns
 }
 
-output "security_group_ingress_rules" {
-  description = "Map of ingress security group rules with their IDs and configurations"
-  value = {
-    ssh = {
-      id                       = aws_security_group_rule.ssh_ingress.id
-      description              = aws_security_group_rule.ssh_ingress.description
-      from_port               = aws_security_group_rule.ssh_ingress.from_port
-      to_port                 = aws_security_group_rule.ssh_ingress.to_port
-      protocol                = aws_security_group_rule.ssh_ingress.protocol
-      cidr_blocks             = aws_security_group_rule.ssh_ingress.cidr_blocks
-      ipv6_cidr_blocks        = aws_security_group_rule.ssh_ingress.ipv6_cidr_blocks
-      source_security_group_id = aws_security_group_rule.ssh_ingress.source_security_group_id
-      prefix_list_ids         = aws_security_group_rule.ssh_ingress.prefix_list_ids
-      type                    = aws_security_group_rule.ssh_ingress.type
-    }
-  }
-}
-
-output "security_group_egress_rules" {
-  description = "Map of egress security group rules with their IDs and configurations"
-  value = {
-    all_outbound = {
-      id                       = aws_security_group_rule.all_outbound_egress.id
-      description              = aws_security_group_rule.all_outbound_egress.description
-      from_port               = aws_security_group_rule.all_outbound_egress.from_port
-      to_port                 = aws_security_group_rule.all_outbound_egress.to_port
-      protocol                = aws_security_group_rule.all_outbound_egress.protocol
-      cidr_blocks             = aws_security_group_rule.all_outbound_egress.cidr_blocks
-      ipv6_cidr_blocks        = aws_security_group_rule.all_outbound_egress.ipv6_cidr_blocks
-      source_security_group_id = aws_security_group_rule.all_outbound_egress.source_security_group_id
-      prefix_list_ids         = aws_security_group_rule.all_outbound_egress.prefix_list_ids
-      type                    = aws_security_group_rule.all_outbound_egress.type
-    }
-  }
-}
-
-output "security_group_rules_summary" {
-  description = "Summary of all security group rules"
-  value = {
-    security_group_id  = aws_security_group.this.id
-    ingress_count      = 1
-    egress_count       = 1
-    ingress_rule_names = ["ssh"]
-    egress_rule_names  = ["all_outbound"]
-  }
-}
 
 # output "key_pair_name" {
 #   description = "Name of the key pair"
