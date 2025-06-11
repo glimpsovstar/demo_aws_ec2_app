@@ -39,17 +39,17 @@ output "public_fqdn" {
 output "security_group_ingress_rules" {
   description = "Map of ingress security group rules with their IDs and configurations"
   value = {
-    for rule_name, rule in aws_security_group_rule.ingress_rules : rule_name => {
-      id                       = rule.id
-      description              = rule.description
-      from_port               = rule.from_port
-      to_port                 = rule.to_port
-      protocol                = rule.protocol
-      cidr_blocks             = rule.cidr_blocks
-      ipv6_cidr_blocks        = rule.ipv6_cidr_blocks
-      source_security_group_id = rule.source_security_group_id
-      prefix_list_ids         = rule.prefix_list_ids
-      type                    = rule.type
+    ssh = {
+      id                       = aws_security_group_rule.ssh_ingress.id
+      description              = aws_security_group_rule.ssh_ingress.description
+      from_port               = aws_security_group_rule.ssh_ingress.from_port
+      to_port                 = aws_security_group_rule.ssh_ingress.to_port
+      protocol                = aws_security_group_rule.ssh_ingress.protocol
+      cidr_blocks             = aws_security_group_rule.ssh_ingress.cidr_blocks
+      ipv6_cidr_blocks        = aws_security_group_rule.ssh_ingress.ipv6_cidr_blocks
+      source_security_group_id = aws_security_group_rule.ssh_ingress.source_security_group_id
+      prefix_list_ids         = aws_security_group_rule.ssh_ingress.prefix_list_ids
+      type                    = aws_security_group_rule.ssh_ingress.type
     }
   }
 }
@@ -57,17 +57,17 @@ output "security_group_ingress_rules" {
 output "security_group_egress_rules" {
   description = "Map of egress security group rules with their IDs and configurations"
   value = {
-    for rule_name, rule in aws_security_group_rule.egress_rules : rule_name => {
-      id                       = rule.id
-      description              = rule.description
-      from_port               = rule.from_port
-      to_port                 = rule.to_port
-      protocol                = rule.protocol
-      cidr_blocks             = rule.cidr_blocks
-      ipv6_cidr_blocks        = rule.ipv6_cidr_blocks
-      source_security_group_id = rule.source_security_group_id
-      prefix_list_ids         = rule.prefix_list_ids
-      type                    = rule.type
+    all_outbound = {
+      id                       = aws_security_group_rule.all_outbound_egress.id
+      description              = aws_security_group_rule.all_outbound_egress.description
+      from_port               = aws_security_group_rule.all_outbound_egress.from_port
+      to_port                 = aws_security_group_rule.all_outbound_egress.to_port
+      protocol                = aws_security_group_rule.all_outbound_egress.protocol
+      cidr_blocks             = aws_security_group_rule.all_outbound_egress.cidr_blocks
+      ipv6_cidr_blocks        = aws_security_group_rule.all_outbound_egress.ipv6_cidr_blocks
+      source_security_group_id = aws_security_group_rule.all_outbound_egress.source_security_group_id
+      prefix_list_ids         = aws_security_group_rule.all_outbound_egress.prefix_list_ids
+      type                    = aws_security_group_rule.all_outbound_egress.type
     }
   }
 }
@@ -76,10 +76,10 @@ output "security_group_rules_summary" {
   description = "Summary of all security group rules"
   value = {
     security_group_id  = aws_security_group.this.id
-    ingress_count      = length(aws_security_group_rule.ingress_rules)
-    egress_count       = length(aws_security_group_rule.egress_rules)
-    ingress_rule_names = keys(aws_security_group_rule.ingress_rules)
-    egress_rule_names  = keys(aws_security_group_rule.egress_rules)
+    ingress_count      = 1
+    egress_count       = 1
+    ingress_rule_names = ["ssh"]
+    egress_rule_names  = ["all_outbound"]
   }
 }
 

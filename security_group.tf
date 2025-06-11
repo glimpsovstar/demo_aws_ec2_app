@@ -33,42 +33,32 @@ resource "aws_security_group" "this" {
   }
 }
 
-# Ingress rules using the rules-only pattern
-resource "aws_security_group_rule" "ingress_rules" {
-  for_each = var.security_group_ingress_rules
-
+# Ingress rules using the rules-only pattern - individual resources
+resource "aws_security_group_rule" "ssh_ingress" {
   security_group_id = aws_security_group.this.id
   type              = "ingress"
 
-  description              = each.value.description
-  from_port               = each.value.from_port
-  to_port                 = each.value.to_port
-  protocol                = each.value.protocol
-  cidr_blocks             = length(each.value.cidr_blocks) > 0 ? each.value.cidr_blocks : null
-  ipv6_cidr_blocks        = length(each.value.ipv6_cidr_blocks) > 0 ? each.value.ipv6_cidr_blocks : null
-  source_security_group_id = each.value.source_security_group_id
-  prefix_list_ids         = each.value.prefix_list_id != null ? [each.value.prefix_list_id] : null
+  description = "SSH access"
+  from_port   = 22
+  to_port     = 22
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-# Egress rules using the rules-only pattern
-resource "aws_security_group_rule" "egress_rules" {
-  for_each = var.security_group_egress_rules
-
+# Egress rules using the rules-only pattern - individual resources
+resource "aws_security_group_rule" "all_outbound_egress" {
   security_group_id = aws_security_group.this.id
   type              = "egress"
 
-  description              = each.value.description
-  from_port               = each.value.from_port
-  to_port                 = each.value.to_port
-  protocol                = each.value.protocol
-  cidr_blocks             = length(each.value.cidr_blocks) > 0 ? each.value.cidr_blocks : null
-  ipv6_cidr_blocks        = length(each.value.ipv6_cidr_blocks) > 0 ? each.value.ipv6_cidr_blocks : null
-  source_security_group_id = each.value.source_security_group_id
-  prefix_list_ids         = each.value.prefix_list_id != null ? [each.value.prefix_list_id] : null
+  description = "Allow all outbound traffic"
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
 
   lifecycle {
     create_before_destroy = true
