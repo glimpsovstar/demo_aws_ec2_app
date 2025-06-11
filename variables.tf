@@ -74,11 +74,13 @@ variable "security_group_ingress_rules" {
   validation {
     condition = alltrue([
       for rule in values(var.security_group_ingress_rules) :
-      rule.from_port >= 0 && rule.from_port <= 65535 &&
-      rule.to_port >= 0 && rule.to_port <= 65535 &&
-      rule.from_port <= rule.to_port
+      rule.protocol == "-1" ? true : (
+        rule.from_port >= 0 && rule.from_port <= 65535 &&
+        rule.to_port >= 0 && rule.to_port <= 65535 &&
+        rule.from_port <= rule.to_port
+      )
     ])
-    error_message = "Port numbers must be between 0 and 65535, and from_port must be less than or equal to to_port."
+    error_message = "Port numbers must be between 0 and 65535, and from_port must be less than or equal to to_port. When protocol is '-1', ports are not used."
   }
 
   validation {
@@ -118,11 +120,13 @@ variable "security_group_egress_rules" {
   validation {
     condition = alltrue([
       for rule in values(var.security_group_egress_rules) :
-      rule.from_port >= 0 && rule.from_port <= 65535 &&
-      rule.to_port >= 0 && rule.to_port <= 65535 &&
-      rule.from_port <= rule.to_port
+      rule.protocol == "-1" ? true : (
+        rule.from_port >= 0 && rule.from_port <= 65535 &&
+        rule.to_port >= 0 && rule.to_port <= 65535 &&
+        rule.from_port <= rule.to_port
+      )
     ])
-    error_message = "Port numbers must be between 0 and 65535, and from_port must be less than or equal to to_port."
+    error_message = "Port numbers must be between 0 and 65535, and from_port must be less than or equal to to_port. When protocol is '-1', ports are not used."
   }
 
   validation {
