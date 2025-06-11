@@ -39,18 +39,17 @@ output "public_fqdn" {
 output "security_group_ingress_rules" {
   description = "Map of ingress security group rules with their IDs and configurations"
   value = {
-    for rule_name, rule in aws_vpc_security_group_ingress_rule.this : rule_name => {
-      id                           = rule.id
-      security_group_rule_id       = rule.security_group_rule_id
-      description                  = rule.description
-      from_port                    = rule.from_port
-      to_port                      = rule.to_port
-      ip_protocol                  = rule.ip_protocol
-      cidr_ipv4                    = rule.cidr_ipv4
-      cidr_ipv6                    = rule.cidr_ipv6
-      referenced_security_group_id = rule.referenced_security_group_id
-      prefix_list_id               = rule.prefix_list_id
-      tags                         = rule.tags
+    for rule_name, rule in aws_security_group_rule.ingress_rules : rule_name => {
+      id                       = rule.id
+      description              = rule.description
+      from_port               = rule.from_port
+      to_port                 = rule.to_port
+      protocol                = rule.protocol
+      cidr_blocks             = rule.cidr_blocks
+      ipv6_cidr_blocks        = rule.ipv6_cidr_blocks
+      source_security_group_id = rule.source_security_group_id
+      prefix_list_ids         = rule.prefix_list_ids
+      type                    = rule.type
     }
   }
 }
@@ -58,18 +57,17 @@ output "security_group_ingress_rules" {
 output "security_group_egress_rules" {
   description = "Map of egress security group rules with their IDs and configurations"
   value = {
-    for rule_name, rule in aws_vpc_security_group_egress_rule.this : rule_name => {
-      id                           = rule.id
-      security_group_rule_id       = rule.security_group_rule_id
-      description                  = rule.description
-      from_port                    = rule.from_port
-      to_port                      = rule.to_port
-      ip_protocol                  = rule.ip_protocol
-      cidr_ipv4                    = rule.cidr_ipv4
-      cidr_ipv6                    = rule.cidr_ipv6
-      referenced_security_group_id = rule.referenced_security_group_id
-      prefix_list_id               = rule.prefix_list_id
-      tags                         = rule.tags
+    for rule_name, rule in aws_security_group_rule.egress_rules : rule_name => {
+      id                       = rule.id
+      description              = rule.description
+      from_port               = rule.from_port
+      to_port                 = rule.to_port
+      protocol                = rule.protocol
+      cidr_blocks             = rule.cidr_blocks
+      ipv6_cidr_blocks        = rule.ipv6_cidr_blocks
+      source_security_group_id = rule.source_security_group_id
+      prefix_list_ids         = rule.prefix_list_ids
+      type                    = rule.type
     }
   }
 }
@@ -78,10 +76,10 @@ output "security_group_rules_summary" {
   description = "Summary of all security group rules"
   value = {
     security_group_id  = aws_security_group.this.id
-    ingress_count      = length(aws_vpc_security_group_ingress_rule.this)
-    egress_count       = length(aws_vpc_security_group_egress_rule.this)
-    ingress_rule_names = keys(aws_vpc_security_group_ingress_rule.this)
-    egress_rule_names  = keys(aws_vpc_security_group_egress_rule.this)
+    ingress_count      = length(aws_security_group_rule.ingress_rules)
+    egress_count       = length(aws_security_group_rule.egress_rules)
+    ingress_rule_names = keys(aws_security_group_rule.ingress_rules)
+    egress_rule_names  = keys(aws_security_group_rule.egress_rules)
   }
 }
 
