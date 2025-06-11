@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "AWS region to deploy resources"
   type        = string
-  default     = "ap-southeast-2"  # Change this to your preferred region
+  default     = "ap-southeast-2" # Change this to your preferred region
 }
 
 # Variables for the EC2 instances in default VPC
@@ -22,7 +22,7 @@ variable "ami_id" {
   description = "AMI ID to use for the instances"
   type        = string
   # This is a placeholder - you should use a data source or provide a specific AMI ID
-  default     = null
+  default = null
 }
 
 variable "subnet_id" {
@@ -53,13 +53,13 @@ variable "security_group_ingress_rules" {
   description = "Map of ingress rules for the security group"
   type = map(object({
     description              = string
-    from_port               = number
-    to_port                 = number
-    protocol                = string
-    cidr_blocks             = optional(list(string))
-    ipv6_cidr_blocks        = optional(list(string))
+    from_port                = number
+    to_port                  = number
+    protocol                 = string
+    cidr_blocks              = optional(list(string), [])
+    ipv6_cidr_blocks         = optional(list(string), [])
     source_security_group_id = optional(string)
-    self                    = optional(bool)
+    prefix_list_id           = optional(string)
   }))
   default = {
     ssh = {
@@ -70,15 +70,26 @@ variable "security_group_ingress_rules" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   }
-  
+
   validation {
     condition = alltrue([
-      for rule in values(var.security_group_ingress_rules) : 
-      rule.from_port >= 0 && rule.from_port <= 65535 && 
+      for rule in values(var.security_group_ingress_rules) :
+      rule.from_port >= 0 && rule.from_port <= 65535 &&
       rule.to_port >= 0 && rule.to_port <= 65535 &&
       rule.from_port <= rule.to_port
     ])
     error_message = "Port numbers must be between 0 and 65535, and from_port must be less than or equal to to_port."
+  }
+
+  validation {
+    condition = alltrue([
+      for rule in values(var.security_group_ingress_rules) :
+      length([
+        for source in [rule.cidr_blocks, rule.ipv6_cidr_blocks, [rule.source_security_group_id], [rule.prefix_list_id]] :
+        source if source != null && source != [] && source != [""]
+      ]) >= 1
+    ])
+    error_message = "Each rule must specify at least one source: cidr_blocks, ipv6_cidr_blocks, source_security_group_id, or prefix_list_id."
   }
 }
 
@@ -86,13 +97,13 @@ variable "security_group_egress_rules" {
   description = "Map of egress rules for the security group"
   type = map(object({
     description              = string
-    from_port               = number
-    to_port                 = number
-    protocol                = string
-    cidr_blocks             = optional(list(string))
-    ipv6_cidr_blocks        = optional(list(string))
+    from_port                = number
+    to_port                  = number
+    protocol                 = string
+    cidr_blocks              = optional(list(string), [])
+    ipv6_cidr_blocks         = optional(list(string), [])
     source_security_group_id = optional(string)
-    self                    = optional(bool)
+    prefix_list_id           = optional(string)
   }))
   default = {
     all_outbound = {
@@ -103,22 +114,33 @@ variable "security_group_egress_rules" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   }
-  
+
   validation {
     condition = alltrue([
-      for rule in values(var.security_group_egress_rules) : 
-      rule.from_port >= 0 && rule.from_port <= 65535 && 
+      for rule in values(var.security_group_egress_rules) :
+      rule.from_port >= 0 && rule.from_port <= 65535 &&
       rule.to_port >= 0 && rule.to_port <= 65535 &&
       rule.from_port <= rule.to_port
     ])
     error_message = "Port numbers must be between 0 and 65535, and from_port must be less than or equal to to_port."
+  }
+
+  validation {
+    condition = alltrue([
+      for rule in values(var.security_group_egress_rules) :
+      length([
+        for source in [rule.cidr_blocks, rule.ipv6_cidr_blocks, [rule.source_security_group_id], [rule.prefix_list_id]] :
+        source if source != null && source != [] && source != [""]
+      ]) >= 1
+    ])
+    error_message = "Each rule must specify at least one source: cidr_blocks, ipv6_cidr_blocks, source_security_group_id, or prefix_list_id."
   }
 }
 
 variable "tags" {
   description = "Tags to apply to all resources"
   type        = map(string)
-  default     = {
+  default = {
     Environment = "dev"
     Project     = "demo-app"
     Terraform   = "true"

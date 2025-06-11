@@ -7,10 +7,12 @@ instance_type      = "t3.micro"
 # ami_id             = "ami-0123456789abcdef0"  # Uncomment and specify an AMI ID
 # key_name           = "your-key-pair-name"     # Uncomment and specify your key pair name
 
-# Example security group rules using the new map-based structure
+# Example security group rules using the new VPC-specific resources
 # NOTE: Each rule is managed as a separate resource for proper drift detection
 # in Terraform Enterprise. Rules modified outside Terraform will be detected
 # and can be corrected on the next apply.
+# Each rule must specify exactly one source: cidr_blocks, ipv6_cidr_blocks, 
+# source_security_group_id, or prefix_list_id
 # security_group_ingress_rules = {
 #   ssh = {
 #     description = "SSH access"
@@ -32,6 +34,30 @@ instance_type      = "t3.micro"
 #     to_port     = 443
 #     protocol    = "tcp"
 #     cidr_blocks = ["0.0.0.0/0"]
+#   }
+#   # Example of IPv6 rule
+#   ssh_ipv6 = {
+#     description      = "SSH access over IPv6"
+#     from_port        = 22
+#     to_port          = 22
+#     protocol         = "tcp"
+#     ipv6_cidr_blocks = ["::/0"]
+#   }
+#   # Example of security group reference
+#   internal = {
+#     description              = "Internal communication"
+#     from_port               = 8080
+#     to_port                 = 8080
+#     protocol                = "tcp"
+#     source_security_group_id = "sg-xxxxxxxxx"
+#   }
+#   # Example of prefix list
+#   s3_access = {
+#     description    = "S3 access via prefix list"
+#     from_port      = 443
+#     to_port        = 443
+#     protocol       = "tcp"
+#     prefix_list_id = "pl-xxxxxxxxx"
 #   }
 # }
 
