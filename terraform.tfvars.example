@@ -8,6 +8,9 @@ instance_type      = "t3.micro"
 # key_name           = "your-key-pair-name"     # Uncomment and specify your key pair name
 
 # Example security group rules using the new map-based structure
+# NOTE: Each rule is managed as a separate resource for proper drift detection
+# in Terraform Enterprise. Rules modified outside Terraform will be detected
+# and can be corrected on the next apply.
 # security_group_ingress_rules = {
 #   ssh = {
 #     description = "SSH access"
