@@ -9,10 +9,10 @@ terraform {
       version = ">= 4.0.0"
     }
 
-    aap = {
-      source  = "hashicorp/aap"
-      version = ">= 1.2.0"
-    }
+    # aap = {
+    #   source  = "hashicorp/aap"
+    #   version = ">= 1.2.0"
+    # }
   }
 }
 
