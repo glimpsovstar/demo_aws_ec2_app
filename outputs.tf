@@ -36,6 +36,52 @@ output "public_fqdn" {
   value       = aws_instance.this.public_dns
 }
 
+output "security_group_ingress_rules" {
+  description = "Map of ingress security group rules with their IDs and configurations"
+  value = {
+    for rule_name, rule in aws_security_group_rule.ingress : rule_name => {
+      id                       = rule.id
+      description              = rule.description
+      from_port               = rule.from_port
+      to_port                 = rule.to_port
+      protocol                = rule.protocol
+      cidr_blocks             = rule.cidr_blocks
+      ipv6_cidr_blocks        = rule.ipv6_cidr_blocks
+      source_security_group_id = rule.source_security_group_id
+      self                    = rule.self
+      type                    = rule.type
+    }
+  }
+}
+
+output "security_group_egress_rules" {
+  description = "Map of egress security group rules with their IDs and configurations"
+  value = {
+    for rule_name, rule in aws_security_group_rule.egress : rule_name => {
+      id                       = rule.id
+      description              = rule.description
+      from_port               = rule.from_port
+      to_port                 = rule.to_port
+      protocol                = rule.protocol
+      cidr_blocks             = rule.cidr_blocks
+      ipv6_cidr_blocks        = rule.ipv6_cidr_blocks
+      source_security_group_id = rule.source_security_group_id
+      self                    = rule.self
+      type                    = rule.type
+    }
+  }
+}
+
+output "security_group_rules_summary" {
+  description = "Summary of all security group rules"
+  value = {
+    security_group_id = aws_security_group.this.id
+    ingress_count     = length(aws_security_group_rule.ingress)
+    egress_count      = length(aws_security_group_rule.egress)
+    ingress_rule_names = keys(aws_security_group_rule.ingress)
+    egress_rule_names  = keys(aws_security_group_rule.egress)
+  }
+}
 
 # output "key_pair_name" {
 #   description = "Name of the key pair"
