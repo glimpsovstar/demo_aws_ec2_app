@@ -7,6 +7,41 @@ instance_type      = "t3.micro"
 # ami_id             = "ami-0123456789abcdef0"  # Uncomment and specify an AMI ID
 # key_name           = "your-key-pair-name"     # Uncomment and specify your key pair name
 
+# Example security group rules using the new map-based structure
+# security_group_ingress_rules = {
+#   ssh = {
+#     description = "SSH access"
+#     from_port   = 22
+#     to_port     = 22
+#     protocol    = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+#   http = {
+#     description = "HTTP access"
+#     from_port   = 80
+#     to_port     = 80
+#     protocol    = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+#   https = {
+#     description = "HTTPS access"
+#     from_port   = 443
+#     to_port     = 443
+#     protocol    = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+# }
+
+# security_group_egress_rules = {
+#   all_outbound = {
+#     description = "Allow all outbound traffic"
+#     from_port   = 0
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+# }
+
 tags = {
   Environment = "dev"
   Project     = "demo-app"

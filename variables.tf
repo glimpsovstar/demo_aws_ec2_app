@@ -50,43 +50,69 @@ variable "security_group_name" {
 }
 
 variable "security_group_ingress_rules" {
-  description = "List of ingress rules for the security group"
-  type        = list(object({
-    description = string
-    from_port   = number
-    to_port     = number
-    protocol    = string
-    cidr_blocks = list(string)
+  description = "Map of ingress rules for the security group"
+  type = map(object({
+    description              = string
+    from_port               = number
+    to_port                 = number
+    protocol                = string
+    cidr_blocks             = optional(list(string))
+    ipv6_cidr_blocks        = optional(list(string))
+    source_security_group_id = optional(string)
+    self                    = optional(bool)
   }))
-  default     = [
-    {
-      description = "SSH from anywhere"
+  default = {
+    ssh = {
+      description = "SSH access"
       from_port   = 22
       to_port     = 22
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
     }
-  ]
+  }
+  
+  validation {
+    condition = alltrue([
+      for rule in values(var.security_group_ingress_rules) : 
+      rule.from_port >= 0 && rule.from_port <= 65535 && 
+      rule.to_port >= 0 && rule.to_port <= 65535 &&
+      rule.from_port <= rule.to_port
+    ])
+    error_message = "Port numbers must be between 0 and 65535, and from_port must be less than or equal to to_port."
+  }
 }
 
 variable "security_group_egress_rules" {
-  description = "List of egress rules for the security group"
-  type        = list(object({
-    description = string
-    from_port   = number
-    to_port     = number
-    protocol    = string
-    cidr_blocks = list(string)
+  description = "Map of egress rules for the security group"
+  type = map(object({
+    description              = string
+    from_port               = number
+    to_port                 = number
+    protocol                = string
+    cidr_blocks             = optional(list(string))
+    ipv6_cidr_blocks        = optional(list(string))
+    source_security_group_id = optional(string)
+    self                    = optional(bool)
   }))
-  default     = [
-    {
+  default = {
+    all_outbound = {
       description = "Allow all outbound traffic"
       from_port   = 0
       to_port     = 0
       protocol    = "-1"
       cidr_blocks = ["0.0.0.0/0"]
     }
-  ]
+  }
+  
+  validation {
+    condition = alltrue([
+      for rule in values(var.security_group_egress_rules) : 
+      rule.from_port >= 0 && rule.from_port <= 65535 && 
+      rule.to_port >= 0 && rule.to_port <= 65535 &&
+      rule.from_port <= rule.to_port
+    ])
+    error_message = "Port numbers must be between 0 and 65535, and from_port must be less than or equal to to_port."
+  }
 }
 
 variable "tags" {
