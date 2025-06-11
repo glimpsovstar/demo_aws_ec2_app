@@ -65,13 +65,6 @@ variable "security_group_ingress_rules" {
       to_port     = 22
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
-    },
-    {
-      description = "HTTP from anywhere"
-      from_port   = 80
-      to_port     = 80
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
     }
   ]
 }
