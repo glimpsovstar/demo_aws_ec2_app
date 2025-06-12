@@ -19,3 +19,13 @@ resource "aap_host" "sample_foo" {
   )
   groups = [aap_group.vm_groups.id]
 }
+
+data "aap_job_template" "create_cr" {
+  name = "Create Standard Change Record"
+  organization = "Default"
+}
+
+resource "aap_job" "sample_bar" {
+  job_template_id = data.aap_job_template.create_cr.id
+  inventory_id    = aap_inventory.vm_inventory.id
+}
