@@ -1,3 +1,6 @@
+# TFC Workspace ID for inventory naming
+variable "TFC_WORKSPACE_ID" {}
+
 variable "aws_region" {
   description = "AWS region to deploy resources"
   type        = string
