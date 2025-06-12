@@ -10,7 +10,7 @@ terraform {
     }
 
     aap = {
-      source  = "hashicorp/aap"
+      source  = "ansible/aap"
       version = ">= 1.2.0"
     }
   }
