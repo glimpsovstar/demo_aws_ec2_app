@@ -3,7 +3,7 @@
 
 # Get default VPC if vpc_id is not specified
 data "aws_vpc" "default" {
-  default = true
+  default = var.vpc_id != null ? false : true
   id      = var.vpc_id != null ? var.vpc_id : null
 }
 
