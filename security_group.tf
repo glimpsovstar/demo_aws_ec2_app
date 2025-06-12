@@ -37,7 +37,7 @@ resource "aws_security_group_rule" "ssh_ingress" {
   security_group_id = aws_security_group.this.id
   type              = "ingress"
 
-  description = "SSH access"
+  description = "SSH Access"
   from_port   = 22
   to_port     = 22
   protocol    = "tcp"
