@@ -25,7 +25,22 @@ data "aap_job_template" "create_cr" {
   organization_name = "Default"
 }
 
-resource "aap_job" "sample_bar" {
+resource "aap_job" "create_cr" {
   job_template_id = data.aap_job_template.create_cr.id
   inventory_id    = aap_inventory.vm_inventory.id
+  extra_vars = jsonencode({
+    "TFC_WORKSPACE_ID" = var.TFC_WORKSPACE_ID
+  })
+  wait_for_completion = true
+  wait_for_completion_timeout_seconds = 180
 }
+
+# resource "aap_job" "close_cr" {
+#   job_template_id = 
+#   inventory_id    = aap_inventory.vm_inventory.id
+#   extra_vars = jsonencode({
+#     "TFC_WORKSPACE_ID" = var.TFC_WORKSPACE_ID
+#     "close_cr" = true
+#   })
+# }
+
