@@ -22,7 +22,7 @@ resource "aap_host" "sample_foo" {
 
 data "aap_job_template" "create_cr" {
   name = "Create Standard Change Record"
-  organization = "Default"
+  organization_name = "Default"
 }
 
 resource "aap_job" "sample_bar" {
