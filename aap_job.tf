@@ -1,16 +1,16 @@
-resource "aap_inventory" "vm_inventory" {
+resource "aap_inventory" "vm_inventory1" {
 
   name        = "Better Together Demo - ${var.TFC_WORKSPACE_ID}"
   description = "Inventory for VMs built with HCP Terraform and managed by AAP"
 }
 
 resource "aap_group" "vm_groups" {
-  inventory_id = aap_inventory.vm_inventory.id
+  inventory_id = aap_inventory.vm_inventory1.id
   name         = "vm_groups"
 }
 
 resource "aap_host" "sample_foo" {
-  inventory_id = aap_inventory.vm_inventory.id
+  inventory_id = aap_inventory.vm_inventory1.id
   name         = "tf_host_foo"
   variables = jsonencode(
     {
@@ -26,14 +26,14 @@ data "aap_job_template" "create_cr" {
 }
 
 resource "time_sleep" "wait_10_seconds" {
-  depends_on = [aap_inventory.vm_inventory]
+  depends_on = [aap_inventory.vm_inventory1]
   create_duration = "10s"
 }
 
 resource "aap_job" "create_cr" {
   depends_on = [ time_sleep.wait_10_seconds ]
   job_template_id = data.aap_job_template.create_cr.id
-  inventory_id    = aap_inventory.vm_inventory.id
+  inventory_id    = aap_inventory.vm_inventory1.id
   extra_vars = jsonencode({
     "TFC_WORKSPACE_ID" = var.TFC_WORKSPACE_ID
   })
