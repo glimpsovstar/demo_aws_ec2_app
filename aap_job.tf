@@ -25,13 +25,7 @@ data "aap_job_template" "create_cr" {
   organization_name = "Default"
 }
 
-resource "time_sleep" "wait_10_seconds" {
-  depends_on = [aap_inventory.vm_inventory]
-  create_duration = "10s"
-}
-
 resource "aap_job" "create_cr" {
-  depends_on = [ time_sleep.wait_10_seconds ]
   job_template_id = data.aap_job_template.create_cr.id
   inventory_id    = aap_inventory.vm_inventory.id
   extra_vars = jsonencode({
