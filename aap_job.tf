@@ -35,13 +35,12 @@ resource "aap_job" "create_cr" {
   wait_for_completion_timeout_seconds = 180
 }
 
-# data "aap_workflow_job_template" "close_cr" {
-#   name = "Sample Workflow Job Template"
-#   organization_name = "Default"
-# }
+data "aap_workflow_job_template" "post_deploy" {
+  name = "AAP Post Deployment"
+  organization_name = "Default"
+}
 
-# resource "aap_workflow_job" "sample_abc" {
-#   workflow_job_template_id = data.aap_workflow_job_template.close_cr.id
-#   inventory_id             = aap_inventory.my_inventory.id
-#   extra_vars               = yamlencode({ "os" : "Linux", "automation" : "ansible" })
-# }
+resource "aap_workflow_job" "post_deploy" {
+  workflow_job_template_id = data.aap_workflow_job_template.post_deploy.id
+  inventory_id             = aap_inventory.my_inventory.id
+}
