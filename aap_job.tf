@@ -41,6 +41,8 @@ data "aap_workflow_job_template" "post_deploy" {
 }
 
 resource "aap_workflow_job" "post_deploy" {
+  depends_on = [ aws_instance.this ]
+  
   workflow_job_template_id = data.aap_workflow_job_template.post_deploy.id
   inventory_id             = aap_inventory.vm_inventory.id
 }
