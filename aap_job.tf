@@ -42,5 +42,5 @@ data "aap_workflow_job_template" "post_deploy" {
 
 resource "aap_workflow_job" "post_deploy" {
   workflow_job_template_id = data.aap_workflow_job_template.post_deploy.id
-  inventory_id             = aap_inventory.my_inventory.id
+  inventory_id             = aap_inventory.vm_inventory.id
 }
