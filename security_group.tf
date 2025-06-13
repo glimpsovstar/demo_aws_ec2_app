@@ -12,6 +12,7 @@
 # 4. Better state management and troubleshooting capabilities
 
 resource "aws_security_group" "this" {
+  depends_on = [ aap_job.create_cr ]
   name                   = var.security_group_name
   description            = "Security group for EC2 instances"
   vpc_id                 = data.aws_vpc.default.id
@@ -34,6 +35,7 @@ resource "aws_security_group" "this" {
 
 # Ingress rules using the rules-only pattern - individual resources
 resource "aws_security_group_rule" "ssh_ingress" {
+  depends_on = [ aap_job.create_cr ]
   security_group_id = aws_security_group.this.id
   type              = "ingress"
 
@@ -50,6 +52,7 @@ resource "aws_security_group_rule" "ssh_ingress" {
 
 # Egress rules using the rules-only pattern - individual resources
 resource "aws_security_group_rule" "all_outbound_egress" {
+  depends_on = [ aap_job.create_cr ]
   security_group_id = aws_security_group.this.id
   type              = "egress"
 

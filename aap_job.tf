@@ -35,12 +35,13 @@ resource "aap_job" "create_cr" {
   wait_for_completion_timeout_seconds = 180
 }
 
-# resource "aap_job" "close_cr" {
-#   job_template_id = 
-#   inventory_id    = aap_inventory.vm_inventory.id
-#   extra_vars = jsonencode({
-#     "TFC_WORKSPACE_ID" = var.TFC_WORKSPACE_ID
-#     "close_cr" = true
-#   })
+# data "aap_workflow_job_template" "close_cr" {
+#   name = "Sample Workflow Job Template"
+#   organization_name = "Default"
 # }
 
+# resource "aap_workflow_job" "sample_abc" {
+#   workflow_job_template_id = data.aap_workflow_job_template.close_cr.id
+#   inventory_id             = aap_inventory.my_inventory.id
+#   extra_vars               = yamlencode({ "os" : "Linux", "automation" : "ansible" })
+# }
