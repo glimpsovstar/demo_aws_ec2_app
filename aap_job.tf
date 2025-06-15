@@ -11,10 +11,15 @@ resource "aap_group" "vm_groups" {
 
 resource "aap_host" "sample_foo" {
   inventory_id = aap_inventory.vm_inventory.id
-  name         = "tf_host_foo"
+  name         = var.instance_name_prefix
   variables = jsonencode(
     {
-      "foo" : "bar"
+      ansible_host : aws_instance.this.public_ip
+      environment: "development"
+      costcenter: "engineering"
+      owner: "devops-team"
+      purpose: "demo-application"
+      backup: "daily"
     }
   )
   groups = [aap_group.vm_groups.id]
@@ -27,7 +32,7 @@ data "aap_job_template" "create_cr" {
 
 resource "aap_job" "create_cr" {
   job_template_id = data.aap_job_template.create_cr.id
-  inventory_id    = aap_inventory.vm_inventory.id
+  # inventory_id    = aap_inventory.vm_inventory.id
   extra_vars = jsonencode({
     "TFC_WORKSPACE_ID" = var.TFC_WORKSPACE_ID
   })
