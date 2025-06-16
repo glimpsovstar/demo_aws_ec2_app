@@ -9,7 +9,7 @@ resource "aap_group" "vm_groups" {
   name         = "vm_groups"
 }
 
-resource "aap_host" "sample_foo" {
+resource "aap_host" "vm" {
   inventory_id = aap_inventory.vm_inventory.id
   name         = var.instance_name_prefix
   variables = jsonencode(
