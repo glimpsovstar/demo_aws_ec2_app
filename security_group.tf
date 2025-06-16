@@ -43,10 +43,10 @@ resource "aws_security_group_rule" "ssh_ingress" {
   from_port   = 22
   to_port     = 22
   protocol    = "tcp"
-  cidr_blocks = ["192.168.0.0/24", "3.106.46.0/24" ]
+  cidr_blocks = ["192.168.0.0/24", "3.106.46.0/24", "54.252.254.55/32"]
 
   lifecycle {
-    create_before_destroy = true
+    #create_before_destroy = true
   }
 }
 
