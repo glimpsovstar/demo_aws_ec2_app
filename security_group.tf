@@ -63,6 +63,6 @@ resource "aws_security_group_rule" "all_outbound_egress" {
   cidr_blocks = ["0.0.0.0/0"]
 
   lifecycle {
-    create_before_destroy = true
+    #create_before_destroy = true
   }
 }
