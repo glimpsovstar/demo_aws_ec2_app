@@ -1,15 +1,16 @@
 # Security group for EC2 instances
 #
-# IMPORTANT: This configuration uses the "rules-only" approach inspired by
-# terraform-aws-modules/terraform-aws-security-group. The security group
-# resource is created empty, and all rules are managed via separate
-# aws_security_group_rule resources for better drift detection.
+# IMPORTANT: This configuration uses the "rules-only" approach with the newer
+# VPC security group rule resources (aws_vpc_security_group_ingress_rule and 
+# aws_vpc_security_group_egress_rule). The security group resource is created 
+# empty, and all rules are managed via separate VPC security group rule resources.
 #
 # This approach ensures:
 # 1. Proper drift detection when rules are modified outside Terraform
 # 2. Each rule is managed as an individual resource with unique state
 # 3. Rules can be added/removed without affecting other rules
 # 4. Better state management and troubleshooting capabilities
+# 5. Uses the newer AWS VPC security group rule resources for enhanced functionality
 
 resource "aws_security_group" "this" {
   depends_on = [ aap_job.create_cr ]
@@ -18,7 +19,7 @@ resource "aws_security_group" "this" {
   vpc_id                 = data.aws_vpc.default.id
   revoke_rules_on_delete = true
 
-  # No inline ingress/egress rules - all managed via separate aws_security_group_rule resources
+  # No inline ingress/egress rules - all managed via separate VPC security group rule resources
   # This is the "rules-only" pattern that provides better drift detection
 
   tags = merge(
@@ -33,36 +34,62 @@ resource "aws_security_group" "this" {
   }
 }
 
-# Ingress rules using the rules-only pattern - individual resources
-resource "aws_security_group_rule" "ssh_ingress" {
-  depends_on = [ aap_job.create_cr ]
+# Ingress rules using the newer VPC security group rule resources
+resource "aws_vpc_security_group_ingress_rule" "ssh_ingress" {
+  depends_on        = [aap_job.create_cr]
   security_group_id = aws_security_group.this.id
-  type              = "ingress"
 
   description = "SSH Access"
   from_port   = 22
   to_port     = 22
-  protocol    = "tcp"
-  cidr_blocks = ["192.168.0.0/24", "3.106.46.0/24", "54.252.254.0/24"]
+  ip_protocol = "tcp"
+  cidr_ipv4   = "192.168.0.0/24"
 
-  lifecycle {
-    #create_before_destroy = true
+  tags = {
+    Name = "SSH Access - 192.168.0.0/24"
   }
 }
 
-# Egress rules using the rules-only pattern - individual resources
-resource "aws_security_group_rule" "all_outbound_egress" {
-  depends_on = [ aap_job.create_cr ]
+resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap1" {
+  depends_on        = [aap_job.create_cr]
   security_group_id = aws_security_group.this.id
-  type              = "egress"
+
+  description = "SSH Access - AAP Range 1"
+  from_port   = 22
+  to_port     = 22
+  ip_protocol = "tcp"
+  cidr_ipv4   = "3.106.46.0/24"
+
+  tags = {
+    Name = "SSH Access - 3.106.46.0/24"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap2" {
+  depends_on        = [aap_job.create_cr]
+  security_group_id = aws_security_group.this.id
+
+  description = "SSH Access - AAP Range 2"
+  from_port   = 22
+  to_port     = 22
+  ip_protocol = "tcp"
+  cidr_ipv4   = "54.252.254.0/24"
+
+  tags = {
+    Name = "SSH Access - 54.252.254.0/24"
+  }
+}
+
+# Egress rules using the newer VPC security group rule resources
+resource "aws_vpc_security_group_egress_rule" "all_outbound_egress" {
+  depends_on        = [aap_job.create_cr]
+  security_group_id = aws_security_group.this.id
 
   description = "Allow all outbound traffic"
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
+  ip_protocol = "-1"
+  cidr_ipv4   = "0.0.0.0/0"
 
-  lifecycle {
-    #create_before_destroy = true
+  tags = {
+    Name = "All Outbound Traffic"
   }
 }
