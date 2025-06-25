@@ -90,7 +90,7 @@ resource "aws_vpc_security_group_ingress_rule" "http_ingress" {
   ip_protocol = "tcp"
   cidr_ipv4   = "0.0.0.0/0"
   tags = {
-    Name = "HTTP Access - 0.0.0/0"
+    Name = "HTTP Access - 0.0.0.0/0"
   }
 }
 
