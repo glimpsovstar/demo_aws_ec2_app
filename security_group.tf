@@ -85,7 +85,6 @@ resource "aws_vpc_security_group_ingress_rule" "http_ingress" {
   depends_on        = [aap_job.create_cr]
   security_group_id = aws_security_group.this.id
   description = "HTTP Access"
-  from_port   = 8081
   to_port     = 8081
   ip_protocol = "tcp"
   cidr_ipv4   = "0.0.0.0/0"
