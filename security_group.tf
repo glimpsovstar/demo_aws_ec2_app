@@ -88,7 +88,7 @@ resource "aws_vpc_security_group_ingress_rule" "http_ingress" {
   from_port   = 80
   to_port     = 80
   ip_protocol = "tcp"
-  cidr_ipv4   = "0.0.0/0"
+  cidr_ipv4   = "0.0.0.0/0"
   tags = {
     Name = "HTTP Access - 0.0.0/0"
   }
