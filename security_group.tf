@@ -80,6 +80,20 @@ resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap2" {
   }
 }
 
+# aws_vpc_security_group_ingress_rule for port 80 (HTTP) access
+resource "aws_vpc_security_group_ingress_rule" "http_ingress" {
+  depends_on        = [aap_job.create_cr]
+  security_group_id = aws_security_group.this.id
+  description = "HTTP Access"
+  from_port   = 80
+  to_port     = 80
+  ip_protocol = "tcp"
+  cidr_ipv4   = "0.0.0/0"
+  tags = {
+    Name = "HTTP Access - 0.0.0/0"
+  }
+}
+
 # Egress rules using the newer VPC security group rule resources
 resource "aws_vpc_security_group_egress_rule" "all_outbound_egress" {
   depends_on        = [aap_job.create_cr]
