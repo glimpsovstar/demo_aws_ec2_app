@@ -1,4 +1,4 @@
-# demo-aws_ec2_app_vaultagent
+# demo_aws_ec2_app
 
 This Terraform configuration deploys EC2 instances with a security group in AWS, designed for applications that integrate with HashiCorp Vault Agent.
 
