@@ -13,7 +13,7 @@
 # 5. Uses the newer AWS VPC security group rule resources for enhanced functionality
 
 resource "aws_security_group" "this" {
-  depends_on = [ aap_job.create_cr ]
+  #depends_on = [ aap_job.create_cr ]
   name                   = var.security_group_name
   description            = "Security group for EC2 instances"
   vpc_id                 = data.aws_vpc.default.id
