@@ -6,7 +6,7 @@ locals {
 
 # Create EC2 instances
 resource "aws_instance" "this" {
-  depends_on = [ aap_job.create_cr ]
+  #depends_on = [ aap_job.create_cr ]
 
   ami                         = var.ami_id
   instance_type               = var.instance_type
