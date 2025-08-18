@@ -50,33 +50,52 @@ resource "aws_vpc_security_group_ingress_rule" "ssh_ingress" {
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap1" {
+# SSH access rules for AAP controller
+# Allow SSH from the entire default VPC CIDR (typically 172.31.0.0/16)
+resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_vpc" {
   depends_on        = [aap_job.create_cr]
   security_group_id = aws_security_group.this.id
 
-  description = "SSH Access - AAP Range 1"
+  description = "SSH Access - VPC Internal"
   from_port   = 22
   to_port     = 22
   ip_protocol = "tcp"
-  cidr_ipv4   = "10.1.3.0/24"
+  cidr_ipv4   = data.aws_vpc.default.cidr_block
 
   tags = {
-    Name = "SSH Access - 10.1.3.0/24"
+    Name = "SSH Access - VPC CIDR"
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap2" {
+# Specific rule for AAP controller private IP (more restrictive)
+resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap_private" {
   depends_on        = [aap_job.create_cr]
   security_group_id = aws_security_group.this.id
 
-  description = "SSH Access - AAP Range 2"
+  description = "SSH Access - AAP Private IP"
   from_port   = 22
   to_port     = 22
   ip_protocol = "tcp"
-  cidr_ipv4   = "54.206.125.0/24"
+  cidr_ipv4   = "10.1.3.62/32"
 
   tags = {
-    Name = "SSH Access - 54.206.125.0/24"
+    Name = "SSH Access - AAP Private IP"
+  }
+}
+
+# Backup rule for public IP (in case of NAT scenarios)
+resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap_public" {
+  depends_on        = [aap_job.create_cr]
+  security_group_id = aws_security_group.this.id
+
+  description = "SSH Access - AAP Public IP"
+  from_port   = 22
+  to_port     = 22
+  ip_protocol = "tcp"
+  cidr_ipv4   = "54.206.125.202/32"
+
+  tags = {
+    Name = "SSH Access - AAP Public IP"
   }
 }
 
