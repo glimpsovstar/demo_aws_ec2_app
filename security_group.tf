@@ -50,40 +50,13 @@ resource "aws_vpc_security_group_ingress_rule" "ssh_ingress" {
   }
 }
 
-# SSH access rules for AAP controller
-# Allow SSH from the entire default VPC CIDR (typically 172.31.0.0/16)
-resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_vpc" {
-  depends_on        = [aap_job.create_cr]
-  security_group_id = aws_security_group.this.id
+# SSH access rules for AAP controller (different VPC scenario)
+# Since AAP and target instances are in different VPCs, connection will be via public IPs
 
-  description = "SSH Access - VPC Internal"
-  from_port   = 22
-  to_port     = 22
-  ip_protocol = "tcp"
-  cidr_ipv4   = data.aws_vpc.default.cidr_block
+# Remove VPC CIDR rule as it's not relevant for cross-VPC communication
+# resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_vpc" - REMOVED
 
-  tags = {
-    Name = "SSH Access - VPC CIDR"
-  }
-}
-
-# Specific rule for AAP controller private IP (more restrictive)
-resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap_private" {
-  depends_on        = [aap_job.create_cr]
-  security_group_id = aws_security_group.this.id
-
-  description = "SSH Access - AAP Private IP"
-  from_port   = 22
-  to_port     = 22
-  ip_protocol = "tcp"
-  cidr_ipv4   = "10.1.3.62/32"
-
-  tags = {
-    Name = "SSH Access - AAP Private IP"
-  }
-}
-
-# Backup rule for public IP (in case of NAT scenarios)
+# Keep the specific public IP rule for AAP controller
 resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap_public" {
   depends_on        = [aap_job.create_cr]
   security_group_id = aws_security_group.this.id
@@ -96,6 +69,22 @@ resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap_public" {
 
   tags = {
     Name = "SSH Access - AAP Public IP"
+  }
+}
+
+# Add broader AWS CIDR for AAP controller's region (more flexible)
+resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap_aws_range" {
+  depends_on        = [aap_job.create_cr]
+  security_group_id = aws_security_group.this.id
+
+  description = "SSH Access - AAP AWS IP Range"
+  from_port   = 22
+  to_port     = 22
+  ip_protocol = "tcp"
+  cidr_ipv4   = "52.95.36.0/22"
+
+  tags = {
+    Name = "SSH Access - AAP AWS Range"
   }
 }
 
