@@ -13,7 +13,7 @@
 # 5. Uses the newer AWS VPC security group rule resources for enhanced functionality
 
 resource "aws_security_group" "this" {
-  #depends_on = [ aap_job.create_cr ]
+  depends_on = [ aap_job.create_cr ]
   name                   = var.security_group_name
   description            = "Security group for EC2 instances"
   vpc_id                 = data.aws_vpc.default.id
@@ -36,7 +36,7 @@ resource "aws_security_group" "this" {
 
 # Ingress rules using the newer VPC security group rule resources
 resource "aws_vpc_security_group_ingress_rule" "ssh_ingress" {
-  #depends_on        = [aap_job.create_cr]
+  depends_on        = [aap_job.create_cr]
   security_group_id = aws_security_group.this.id
 
   description = "SSH Access"
@@ -51,38 +51,38 @@ resource "aws_vpc_security_group_ingress_rule" "ssh_ingress" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap1" {
-  #depends_on        = [aap_job.create_cr]
+  depends_on        = [aap_job.create_cr]
   security_group_id = aws_security_group.this.id
 
   description = "SSH Access - AAP Range 1"
   from_port   = 22
   to_port     = 22
   ip_protocol = "tcp"
-  cidr_ipv4   = "3.106.46.0/24"
+  cidr_ipv4   = "54.206.125.202/24"
 
   tags = {
-    Name = "SSH Access - 3.106.46.0/24"
+    Name = "SSH Access - 54.206.125.202/24"
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap2" {
-  #depends_on        = [aap_job.create_cr]
-  security_group_id = aws_security_group.this.id
+# resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap2" {
+#   depends_on        = [aap_job.create_cr]
+#   security_group_id = aws_security_group.this.id
 
-  description = "SSH Access - AAP Range 2"
-  from_port   = 22
-  to_port     = 22
-  ip_protocol = "tcp"
-  cidr_ipv4   = "54.252.254.0/24"
+#   description = "SSH Access - AAP Range 2"
+#   from_port   = 22
+#   to_port     = 22
+#   ip_protocol = "tcp"
+#   cidr_ipv4   = "54.252.254.0/24"
 
-  tags = {
-    Name = "SSH Access - 54.252.254.0/24"
-  }
-}
+#   tags = {
+#     Name = "SSH Access - 54.252.254.0/24"
+#   }
+# }
 
 # aws_vpc_security_group_ingress_rule for port 80 (HTTP) access
 resource "aws_vpc_security_group_ingress_rule" "http_ingress" {
-  #depends_on        = [aap_job.create_cr]
+  depends_on        = [aap_job.create_cr]
   security_group_id = aws_security_group.this.id
   description = "HTTP Access"
   from_port = 80
@@ -96,7 +96,7 @@ resource "aws_vpc_security_group_ingress_rule" "http_ingress" {
 
 # Egress rules using the newer VPC security group rule resources
 resource "aws_vpc_security_group_egress_rule" "all_outbound_egress" {
-  #depends_on        = [aap_job.create_cr]
+  depends_on        = [aap_job.create_cr]
   security_group_id = aws_security_group.this.id
 
   description = "Allow all outbound traffic"
