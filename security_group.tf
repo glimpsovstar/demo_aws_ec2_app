@@ -57,20 +57,20 @@ resource "aws_vpc_security_group_ingress_rule" "ssh_ingress" {
 # resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_vpc" - REMOVED
 
 # Keep the specific public IP rule for AAP controller
-resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap_public" {
-  depends_on        = [aap_job.create_cr]
-  security_group_id = aws_security_group.this.id
+# resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap_public" {
+#   depends_on        = [aap_job.create_cr]
+#   security_group_id = aws_security_group.this.id
 
-  description = "SSH Access - AAP Public IP"
-  from_port   = 22
-  to_port     = 22
-  ip_protocol = "tcp"
-  cidr_ipv4   = "54.206.125.202/32"
+#   description = "SSH Access - AAP Public IP"
+#   from_port   = 22
+#   to_port     = 22
+#   ip_protocol = "tcp"
+#   cidr_ipv4   = "54.206.125.202/32"
 
-  tags = {
-    Name = "SSH Access - AAP Public IP"
-  }
-}
+#   tags = {
+#     Name = "SSH Access - AAP Public IP"
+#   }
+# }
 
 # Add broader AWS CIDR for AAP controller's region (more flexible)
 resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap_aws_range" {
