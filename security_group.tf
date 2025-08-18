@@ -58,27 +58,27 @@ resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap1" {
   from_port   = 22
   to_port     = 22
   ip_protocol = "tcp"
+  cidr_ipv4   = "10.1.3.0/24"
+
+  tags = {
+    Name = "SSH Access - 10.1.3.0/24"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap2" {
+  depends_on        = [aap_job.create_cr]
+  security_group_id = aws_security_group.this.id
+
+  description = "SSH Access - AAP Range 2"
+  from_port   = 22
+  to_port     = 22
+  ip_protocol = "tcp"
   cidr_ipv4   = "54.206.125.0/24"
 
   tags = {
     Name = "SSH Access - 54.206.125.0/24"
   }
 }
-
-# resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap2" {
-#   depends_on        = [aap_job.create_cr]
-#   security_group_id = aws_security_group.this.id
-
-#   description = "SSH Access - AAP Range 2"
-#   from_port   = 22
-#   to_port     = 22
-#   ip_protocol = "tcp"
-#   cidr_ipv4   = "54.252.254.0/24"
-
-#   tags = {
-#     Name = "SSH Access - 54.252.254.0/24"
-#   }
-# }
 
 # aws_vpc_security_group_ingress_rule for port 80 (HTTP) access
 resource "aws_vpc_security_group_ingress_rule" "http_ingress" {
