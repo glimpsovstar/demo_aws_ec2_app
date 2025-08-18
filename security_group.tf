@@ -58,10 +58,10 @@ resource "aws_vpc_security_group_ingress_rule" "ssh_ingress_aap1" {
   from_port   = 22
   to_port     = 22
   ip_protocol = "tcp"
-  cidr_ipv4   = "54.206.125.202/24"
+  cidr_ipv4   = "54.206.125.0/24"
 
   tags = {
-    Name = "SSH Access - 54.206.125.202/24"
+    Name = "SSH Access - 54.206.125.0/24"
   }
 }
 
