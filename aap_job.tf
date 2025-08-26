@@ -41,7 +41,7 @@ resource "aap_job" "create_cr" {
 }
 
 data "aap_workflow_job_template" "post_deploy" {
-  name = "AAP Post Deployment"
+  name = "AAP Post Deployment - djoo"
   organization_name = "Default"
 }
 
