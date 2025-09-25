@@ -148,8 +148,8 @@ variable "tags" {
   description = "Tags to apply to all resources"
   type        = map(string)
   default = {
-    Environment = "dev"
-    Project     = "demo-app"
+    Environment = "test"
+    Project     = "demo-app123"
     Terraform   = "true"
   }
 }
